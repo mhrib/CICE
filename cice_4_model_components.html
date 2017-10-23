@@ -1,13 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
-<!doctype html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>4. Model components &#8212; CICE-Consortium 0.0.1 documentation</title>
-    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
@@ -21,17 +24,12 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="5. Numerical implementation" href="cice_5_numerical_implementation.html" />
-    <link rel="prev" title="3. Coupling with other climate model components" href="cice_3_coupling.html" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <!--[if lt IE 9]>
-    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
-    <![endif]-->
+    <link rel="prev" title="3. Coupling with other climate model components" href="cice_3_coupling.html" /> 
   </head>
-  <body>
+  <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -43,71 +41,7 @@
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">CICE-Consortium 0.0.1 documentation</a> &#187;</li> 
       </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">4. Model components</a><ul>
-<li><a class="reference internal" href="#tracers">4.1. Tracers</a><ul>
-<li><a class="reference internal" href="#tracers-that-depend-on-other-tracers-e-g-melt-ponds">4.1.1. Tracers that depend on other tracers (e.g., melt ponds)</a></li>
-<li><a class="reference internal" href="#ice-age">4.1.2. Ice age</a></li>
-<li><a class="reference internal" href="#sea-ice-biogeochemistry">4.1.3. Sea ice biogeochemistry</a></li>
-<li><a class="reference internal" href="#aerosols">4.1.4. Aerosols</a></li>
-<li><a class="reference internal" href="#brine-height">4.1.5. Brine height</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#horizontal-transport">4.2. Horizontal transport</a><ul>
-<li><a class="reference internal" href="#reconstructing-area-and-tracer-fields">4.2.1. Reconstructing area and tracer fields</a></li>
-<li><a class="reference internal" href="#locating-departure-triangles">4.2.2. Locating departure triangles</a></li>
-<li><a class="reference internal" href="#integrating-fields">4.2.3. Integrating fields</a></li>
-<li><a class="reference internal" href="#updating-state-variables">4.2.4. Updating state variables</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#transport-in-thickness-space">4.3. Transport in thickness space</a></li>
-<li><a class="reference internal" href="#mechanical-redistribution">4.4. Mechanical redistribution</a></li>
-<li><a class="reference internal" href="#dynamics">4.5. Dynamics</a><ul>
-<li><a class="reference internal" href="#momentum">4.5.1. Momentum</a></li>
-<li><a class="reference internal" href="#internal-stress">4.5.2. Internal stress</a></li>
-<li><a class="reference internal" href="#revised-approach">4.5.3. Revised approach</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#thermodynamics">4.6. Thermodynamics</a><ul>
-<li><a class="reference internal" href="#melt-ponds">4.6.1. Melt ponds</a></li>
-<li><a class="reference internal" href="#thermodynamic-surface-forcing-balance">4.6.2. Thermodynamic surface forcing balance</a></li>
-<li><a class="reference internal" href="#new-temperatures">4.6.3. New temperatures</a></li>
-<li><a class="reference internal" href="#growth-and-melting">4.6.4. Growth and melting</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="cice_3_coupling.html"
-                        title="previous chapter">3. Coupling with other climate model components</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="cice_5_numerical_implementation.html"
-                        title="next chapter">5. Numerical implementation</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/cice_4_model_components.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -399,7 +333,7 @@ by the tracers. The chart on the left provides corresponding ice
 thickness and pond depth averages over the grid cell, sea ice and
 pond area fractions.</p>
 <p>Tracers may need to be modified for physical reasons outside of the
-“core” module or subroutine describing their evolution. For example,
+“core&#8221; module or subroutine describing their evolution. For example,
 when new ice forms in open water, the new ice does not yet have ponds on
 it. Likewise when sea ice deforms, we assume that pond water (and ice)
 on the portion of ice that ridges is lost to the ocean.</p>
@@ -672,7 +606,7 @@ but do not change the total amount of aerosol, thus causing the aerosol
 concentration (the value of the tracer itself) to increase: evaporation,
 snow deposition and basal ice growth. Basal and lateral melting remove
 all aerosols in the melted portion. Surface ice and snow melt leave a
-significant fraction of the aerosols behind, but they do “scavenge” a
+significant fraction of the aerosols behind, but they do “scavenge&#8221; a
 fraction of them given by the parameter <cite>kscav</cite> = [0.03, 0.2, 0.02, 0.02,
 0.01, 0.01] (only the first 3 are used in CESM, for their 3 aerosol
 species). Scavenging also applies to snow–ice formation. When sea ice
@@ -2221,9 +2155,9 @@ EVP approach uses the previous time step value.</p>
 <div class="section" id="thermodynamics">
 <span id="thermo"></span><h2>4.6. Thermodynamics<a class="headerlink" href="#thermodynamics" title="Permalink to this headline">¶</a></h2>
 <p>The current CICE version includes three thermodynamics
-options, the “zero-layer” thermodynamics of <a class="reference internal" href="zreferences.html#semtner76" id="id118">[60]</a>
+options, the “zero-layer&#8221; thermodynamics of <a class="reference internal" href="zreferences.html#semtner76" id="id118">[60]</a>
 (<cite>ktherm</cite> = 0), the Bitz and Lipscomb model <a class="reference internal" href="zreferences.html#bl99" id="id119">[7]</a>
-(<cite>ktherm</cite> = 1) that assumes a fixed salinity profile, and a new “mushy”
+(<cite>ktherm</cite> = 1) that assumes a fixed salinity profile, and a new “mushy&#8221;
 formulation (<cite>ktherm</cite> = 2) in which salinity evolves
 <a class="reference internal" href="zreferences.html#thb13" id="id120">[73]</a>. For each thickness category, CICE computes
 changes in the ice and snow thickness and vertical temperature profile
@@ -2288,7 +2222,7 @@ area and depth are maintained throughout the simulation according to the
 physical processes acting on it. However, snow on the sea ice and pond
 ice may shield the pond and ice below from solar radiation. These
 processes do not alter the actual pond volume; instead they are used to
-define an “effective pond fraction” (and likewise, effective pond depth,
+define an “effective pond fraction&#8221; (and likewise, effective pond depth,
 snow fraction and snow depth) used only for the shortwave radiation
 calculation.</p>
 <p>In addition to the physical processes discussed below, tracer equations
@@ -2695,7 +2629,7 @@ Principle written in terms of the draft <span class="math">\(d\)</span>,</p>
 \[\rho_i h_i + \rho_s h_s + \rho_0 h_p = \rho_w d \le \rho_w h_i.\]</div>
 <p>There is a separate freeboard calculation in the thermodynamics which
 considers only the ice and snow and converts flooded snow to sea ice.
-Because the current melt ponds are “virtual” in the sense that they only
+Because the current melt ponds are “virtual&#8221; in the sense that they only
 have a radiative influence, we do not allow the pond mass to change the
 sea ice and snow masses at this time, although this issue may need to be
 reconsidered in the future, especially for the Antarctic.</p>
@@ -2755,12 +2689,12 @@ level-ice ponds) should be used in conjunction with the Delta-Eddington
 shortwave scheme, described below.</p>
 <p><em>Shortwave radiation: Delta-Eddington</em></p>
 <p>Two methods for computing albedo and shortwave fluxes are available, the
-default (“ccsm3”) method, described below, and a multiple scattering
+default (“ccsm3&#8221;) method, described below, and a multiple scattering
 radiative transfer scheme that uses a Delta-Eddington approach.
-“Inherent” optical properties (IOPs) for snow and sea ice, such as
+“Inherent&#8221; optical properties (IOPs) for snow and sea ice, such as
 extinction coefficient and single scattering albedo, are prescribed
 based on physical measurements; reflected, absorbed and transmitted
-shortwave radiation (“apparent” optical properties) are then computed
+shortwave radiation (“apparent&#8221; optical properties) are then computed
 for each snow and ice layer in a self-consistent manner. Absorptive
 effects of inclusions in the ice/snow matrix such as dust and algae can
 also be included, along with radiative treatment of melt ponds and other
@@ -2891,7 +2825,7 @@ ktherm to 0 and changing the number of ice layers, nilyr, in
 fresh and the thermodynamic calculations are much simpler than in the
 other configurations, which we describe here.</p>
 <p><strong>Bitz and Lipscomb thermodynamics</strong> (<cite>ktherm</cite> = 1)</p>
-<p>The “BL99” thermodynamic sea ice model is based on
+<p>The “BL99&#8221; thermodynamic sea ice model is based on
 <a class="reference internal" href="zreferences.html#mu71" id="id141">[50]</a> and <a class="reference internal" href="zreferences.html#bl99" id="id142">[7]</a>, and is
 described more fully in <a class="reference internal" href="zreferences.html#lipscomb98" id="id143">[41]</a>. The vertical
 salinity profile is prescribed and is unchanging in time. The snow is
@@ -2979,7 +2913,7 @@ not be a good description of the thermal conductivity of sea ice. In
 particular, the measured conductivity does not markedly decrease as
 <span class="math">\(T\)</span> approaches , but does decrease near the top surface
 (regardless of temperature).</p>
-<p>An alternative parameterization based on the “bubbly brine” model of
+<p>An alternative parameterization based on the “bubbly brine&#8221; model of
 <a class="reference internal" href="zreferences.html#petb07" id="id151">[55]</a> for conductivity is available
 (<cite>conduct</cite> = ‘bubbly’):</p>
 <div class="math" id="equation-Pringle">
@@ -3193,7 +3127,7 @@ b &amp; = &amp; (c_w - c_0) \, T_m - \frac{q_i}{\rho_i} - L_0, \\
 c &amp; = &amp; L_0 T_m.\end{aligned}\end{split}\]</div>
 <p>The other root is unphysical.</p>
 <p><strong>Mushy thermodynamics</strong> (<cite>ktherm</cite> = 2)</p>
-<p>The “mushy” thermodynamics option treats the sea ice as a mushy layer
+<p>The “mushy&#8221; thermodynamics option treats the sea ice as a mushy layer
 <a class="reference internal" href="zreferences.html#fuww06" id="id152">[18]</a> in which the ice is assumed to be composed
 of microscopic brine inclusions surrounded by a matrix of pure water
 ice. Both enthalpy and salinity are prognostic variables. The size of
@@ -3624,6 +3558,70 @@ with the melt water.</td></tr>
           </div>
         </div>
       </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4. Model components</a><ul>
+<li><a class="reference internal" href="#tracers">4.1. Tracers</a><ul>
+<li><a class="reference internal" href="#tracers-that-depend-on-other-tracers-e-g-melt-ponds">4.1.1. Tracers that depend on other tracers (e.g., melt ponds)</a></li>
+<li><a class="reference internal" href="#ice-age">4.1.2. Ice age</a></li>
+<li><a class="reference internal" href="#sea-ice-biogeochemistry">4.1.3. Sea ice biogeochemistry</a></li>
+<li><a class="reference internal" href="#aerosols">4.1.4. Aerosols</a></li>
+<li><a class="reference internal" href="#brine-height">4.1.5. Brine height</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#horizontal-transport">4.2. Horizontal transport</a><ul>
+<li><a class="reference internal" href="#reconstructing-area-and-tracer-fields">4.2.1. Reconstructing area and tracer fields</a></li>
+<li><a class="reference internal" href="#locating-departure-triangles">4.2.2. Locating departure triangles</a></li>
+<li><a class="reference internal" href="#integrating-fields">4.2.3. Integrating fields</a></li>
+<li><a class="reference internal" href="#updating-state-variables">4.2.4. Updating state variables</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#transport-in-thickness-space">4.3. Transport in thickness space</a></li>
+<li><a class="reference internal" href="#mechanical-redistribution">4.4. Mechanical redistribution</a></li>
+<li><a class="reference internal" href="#dynamics">4.5. Dynamics</a><ul>
+<li><a class="reference internal" href="#momentum">4.5.1. Momentum</a></li>
+<li><a class="reference internal" href="#internal-stress">4.5.2. Internal stress</a></li>
+<li><a class="reference internal" href="#revised-approach">4.5.3. Revised approach</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#thermodynamics">4.6. Thermodynamics</a><ul>
+<li><a class="reference internal" href="#melt-ponds">4.6.1. Melt ponds</a></li>
+<li><a class="reference internal" href="#thermodynamic-surface-forcing-balance">4.6.2. Thermodynamic surface forcing balance</a></li>
+<li><a class="reference internal" href="#new-temperatures">4.6.3. New temperatures</a></li>
+<li><a class="reference internal" href="#growth-and-melting">4.6.4. Growth and melting</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cice_3_coupling.html"
+                        title="previous chapter">3. Coupling with other climate model components</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="cice_5_numerical_implementation.html"
+                        title="next chapter">5. Numerical implementation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/cice_4_model_components.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -3640,7 +3638,7 @@ with the melt water.</td></tr>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017, Los Alamos National Security, LLC (code) and National Center for Atmospheric Research (documentation).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
     </div>
   </body>
 </html>

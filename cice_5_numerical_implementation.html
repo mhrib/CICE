@@ -1,13 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
-<!doctype html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>5. Numerical implementation &#8212; CICE-Consortium 0.0.1 documentation</title>
-    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
@@ -21,17 +24,12 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="6. Troubleshooting" href="cice_6_troubleshooting.html" />
-    <link rel="prev" title="4. Model components" href="cice_4_model_components.html" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <!--[if lt IE 9]>
-    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
-    <![endif]-->
+    <link rel="prev" title="4. Model components" href="cice_4_model_components.html" /> 
   </head>
-  <body>
+  <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -43,67 +41,7 @@
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">CICE-Consortium 0.0.1 documentation</a> &#187;</li> 
       </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">5. Numerical implementation</a><ul>
-<li><a class="reference internal" href="#directory-structure">5.1. Directory structure</a></li>
-<li><a class="reference internal" href="#grid-boundary-conditions-and-masks">5.2. Grid, boundary conditions and masks</a><ul>
-<li><a class="reference internal" href="#grid-domains-and-blocks">5.2.1. Grid domains and blocks</a></li>
-<li><a class="reference internal" href="#tripole-grids">5.2.2. Tripole grids</a></li>
-<li><a class="reference internal" href="#bio-grid">5.2.3. Bio-grid</a></li>
-<li><a class="reference internal" href="#column-configuration">5.2.4. Column configuration</a></li>
-<li><a class="reference internal" href="#boundary-conditions">5.2.5. Boundary conditions</a></li>
-<li><a class="reference internal" href="#masks">5.2.6. Masks</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#initialization-and-coupling">5.3. Initialization and coupling</a></li>
-<li><a class="reference internal" href="#choosing-an-appropriate-time-step">5.4. Choosing an appropriate time step</a></li>
-<li><a class="reference internal" href="#model-output">5.5. Model output</a><ul>
-<li><a class="reference internal" href="#history-files">5.5.1. History files</a></li>
-<li><a class="reference internal" href="#diagnostic-files">5.5.2. Diagnostic files</a></li>
-<li><a class="reference internal" href="#restart-files">5.5.3. Restart files</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#execution-procedures">5.6. Execution procedures</a></li>
-<li><a class="reference internal" href="#performance">5.7. Performance</a></li>
-<li><a class="reference internal" href="#adding-things">5.8. Adding things</a><ul>
-<li><a class="reference internal" href="#addtimer">5.8.1. Timers</a></li>
-<li><a class="reference internal" href="#history-fields">5.8.2. History fields</a></li>
-<li><a class="reference internal" href="#tracers">5.8.3. Tracers</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="cice_4_model_components.html"
-                        title="previous chapter">4. Model components</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="cice_6_troubleshooting.html"
-                        title="next chapter">6. Troubleshooting</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/cice_5_numerical_implementation.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -147,7 +85,7 @@ details).</p>
 <dd>perl script that determines module dependencies</dd>
 </dl>
 <p>script that sets up the run directory and compiles the code</p>
-<p>modules based on “shared” code in CESM</p>
+<p>modules based on “shared&#8221; code in CESM</p>
 <dl class="docutils">
 <dt><strong>shr_orb_mod.F90</strong></dt>
 <dd>orbital parameterizations</dd>
@@ -398,7 +336,7 @@ activated using the namelist variable <cite>gridcpl_file</cite>.</p>
 <cite>nx_global</cite> <span class="math">\(\times\)</span><cite>ny_global</cite>, while the subdomains used in the
 block distribution are <cite>nx_block</cite> <span class="math">\(\times\)</span><cite>ny_block</cite>. The
 physical portion of a subdomain is indexed as [<cite>ilo:ihi</cite>, <cite>jlo:jhi</cite>], with
-nghost “ghost” or “halo” cells outside the domain used for boundary
+nghost “ghost” or “halo&#8221; cells outside the domain used for boundary
 conditions. These parameters are illustrated in&nbsp;<a class="reference internal" href="#fig-grid"><span class="std std-ref">Figure 8</span></a> in one
 dimension. The routines <em>global_scatter</em> and <em>global_gather</em>
 distribute information from the global domain to the local domains and
@@ -559,7 +497,7 @@ grid edge must be filled by restoring them to specified values. The
 namelist variable <cite>restore_ice</cite> turns this functionality on and off; the
 restoring timescale <cite>trestore</cite> may be used (it is also used for restoring
 ocean sea surface temperature in stand-alone ice runs). This
-implementation is only intended to provide the “hooks” for a more
+implementation is only intended to provide the “hooks&#8221; for a more
 sophisticated treatment; the rectangular grid option can be used to test
 this configuration. The ‘displaced_pole’ grid option should not be used
 unless the regional grid contains land all along the north and south
@@ -640,7 +578,7 @@ initial run from a file <strong>filename</strong> in two ways: (1) set runtype =
 ‘initial’, restart = true and ice_ic = <strong>filename</strong>, or (2) runtype =
 ‘continue’ and pointer_file = <strong>./restart/ice.restart_file</strong> where
 <strong>./restart/ice.restart_file</strong> contains the line
-“./restart/[filename]”. The first option is convenient when repeatedly
+“./restart/[filename]&#8221;. The first option is convenient when repeatedly
 starting from a given file when subsequent restart files have been
 written. With this arrangement, the tracer restart flags can be set to
 true or false, depending on whether the tracer restart data exist. With
@@ -715,7 +653,7 @@ CFL condition, under remapping yields</p>
 \[\Delta t_{dyn} &lt; {\min\left(\Delta x, \Delta y\right)\over 2\max\left(u, v\right)}.\]</div>
 <p>Numerical estimates for this bound for several POP grids, assuming
 <span class="math">\(\max(u, v)=0.5\)</span>&nbsp;m/s, are as follows:</p>
-<table border="1" class="docutils">
+<table border="1" class="colwidths-given docutils">
 <colgroup>
 <col width="11%" />
 <col width="22%" />
@@ -892,7 +830,7 @@ convenience.</p>
 <p>Several history variables are available in two forms, a value
 representing an average over the sea ice fraction of the grid cell, and
 another that is multiplied by <span class="math">\(a_i\)</span>, representing an average over
-the grid cell area. Our naming convention attaches the suffix “_ai” to
+the grid cell area. Our naming convention attaches the suffix “_ai&#8221; to
 the grid-cell-mean variable names.</p>
 </div>
 <div class="section" id="diagnostic-files">
@@ -914,7 +852,7 @@ may be changed in <strong>ice_in</strong>.</p>
 <p>Timers are declared and initialized in <strong>ice_timers.F90</strong>, and the code
 to be timed is wrapped with calls to <em>ice_timer_start</em> and
 <em>ice_timer_stop</em>. Finally, <em>ice_timer_print</em> writes the results to
-the log file. The optional “stats” argument (true/false) prints
+the log file. The optional “stats&#8221; argument (true/false) prints
 additional statistics. Calling <em>ice_timer_print_all</em> prints all of
 the timings at once, rather than having to call each individually.
 Currently, the timers are set up as in <a class="reference internal" href="#timers"><span class="std std-ref">Table 5</span></a>.
@@ -1035,7 +973,7 @@ initial model date stamp is determined from the namelist parameters.
 lcdf64 = true sets 64-bit &nbsp;output, allowing larger file sizes with
 version 3.</p>
 <p>Routines for gathering, scattering and (unformatted) reading and writing
-of the “extended” global grid, including the physical domain and ghost
+of the “extended&#8221; global grid, including the physical domain and ghost
 (halo) cells around the outer edges, allow exact restarts on regional
 grids with open boundary conditions, and they will also simplify
 restarts on the various tripole grids. They are accessed by setting
@@ -1267,7 +1205,7 @@ the work is at the top and bottom of the grid with little to do in
 between) and close-to-square domains, which maximize the volume to
 surface ratio (and therefore on-processor computations to message
 passing, if there were ice in every grid cell). In cases where the
-number of processors is not a perfect square (4, 9, 16…), the
+number of processors is not a perfect square (4, 9, 16...), the
 <cite>processor_shape</cite> namelist variable allows the user to choose how the
 processors are arranged. Here again, it is better in the sea ice model
 to have more processors in x than in y, for example, 8 processors
@@ -1307,7 +1245,7 @@ land is present), and is provided here for direct-communication
 compatibility with POP. The ‘latitude’ option weights the blocks based
 on latitude and the number of ocean grid cells they contain.</p>
 <p>The rake distribution type is initialized as a standard, Cartesian
-distribution. Using the work-per-block estimates, blocks are “raked”
+distribution. Using the work-per-block estimates, blocks are “raked&#8221;
 onto neighboring processors as needed to improve load balancing
 characteristics among processors, first in the x direction and then in
 y.</p>
@@ -1445,7 +1383,7 @@ in particular, the concentration is unchanged when there is surface or
 basal melting. The proper units for a volume-weighted mass tracer in the
 tracer array are kg/m.</p>
 <p>In several places in the code, tracer computations must be performed on
-the conserved “tracer volume” rather than the tracer itself; for
+the conserved “tracer volume&#8221; rather than the tracer itself; for
 example, the conserved quantity is <span class="math">\(h_{pnd}a_{pnd}a_{lvl}a_{i}\)</span>,
 not <span class="math">\(h_{pnd}\)</span>. Conserved quantities are thus computed according to
 the tracer dependencies, and code must be included to account for new
@@ -1500,6 +1438,66 @@ topo ponds in Section&nbsp;<a class="reference internal" href="cice_4_model_comp
           </div>
         </div>
       </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">5. Numerical implementation</a><ul>
+<li><a class="reference internal" href="#directory-structure">5.1. Directory structure</a></li>
+<li><a class="reference internal" href="#grid-boundary-conditions-and-masks">5.2. Grid, boundary conditions and masks</a><ul>
+<li><a class="reference internal" href="#grid-domains-and-blocks">5.2.1. Grid domains and blocks</a></li>
+<li><a class="reference internal" href="#tripole-grids">5.2.2. Tripole grids</a></li>
+<li><a class="reference internal" href="#bio-grid">5.2.3. Bio-grid</a></li>
+<li><a class="reference internal" href="#column-configuration">5.2.4. Column configuration</a></li>
+<li><a class="reference internal" href="#boundary-conditions">5.2.5. Boundary conditions</a></li>
+<li><a class="reference internal" href="#masks">5.2.6. Masks</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#initialization-and-coupling">5.3. Initialization and coupling</a></li>
+<li><a class="reference internal" href="#choosing-an-appropriate-time-step">5.4. Choosing an appropriate time step</a></li>
+<li><a class="reference internal" href="#model-output">5.5. Model output</a><ul>
+<li><a class="reference internal" href="#history-files">5.5.1. History files</a></li>
+<li><a class="reference internal" href="#diagnostic-files">5.5.2. Diagnostic files</a></li>
+<li><a class="reference internal" href="#restart-files">5.5.3. Restart files</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#execution-procedures">5.6. Execution procedures</a></li>
+<li><a class="reference internal" href="#performance">5.7. Performance</a></li>
+<li><a class="reference internal" href="#adding-things">5.8. Adding things</a><ul>
+<li><a class="reference internal" href="#addtimer">5.8.1. Timers</a></li>
+<li><a class="reference internal" href="#history-fields">5.8.2. History fields</a></li>
+<li><a class="reference internal" href="#tracers">5.8.3. Tracers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cice_4_model_components.html"
+                        title="previous chapter">4. Model components</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="cice_6_troubleshooting.html"
+                        title="next chapter">6. Troubleshooting</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/cice_5_numerical_implementation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -1516,7 +1514,7 @@ topo ponds in Section&nbsp;<a class="reference internal" href="cice_4_model_comp
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017, Los Alamos National Security, LLC (code) and National Center for Atmospheric Research (documentation).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
     </div>
   </body>
 </html>

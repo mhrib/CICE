@@ -1,13 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
-<!doctype html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>2. Quick Start guide &#8212; CICE-Consortium 0.0.1 documentation</title>
-    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
@@ -21,17 +24,12 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="3. Coupling with other climate model components" href="cice_3_coupling.html" />
-    <link rel="prev" title="1. Introduction - CICE5" href="cice_1_introduction.html" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <!--[if lt IE 9]>
-    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
-    <![endif]-->
+    <link rel="prev" title="1. Introduction - CICE5" href="cice_1_introduction.html" /> 
   </head>
-  <body>
+  <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -43,47 +41,7 @@
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">CICE-Consortium 0.0.1 documentation</a> &#187;</li> 
       </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">2. Quick Start guide</a><ul>
-<li><a class="reference internal" href="#get-the-model">2.1. Get the model</a></li>
-<li><a class="reference internal" href="#running-the-model">2.2. Running the model</a></li>
-<li><a class="reference internal" href="#more-details">2.3. More Details:</a></li>
-<li><a class="reference internal" href="#forcing-data">2.4. Forcing data</a></li>
-<li><a class="reference internal" href="#online-resources">2.5. Online resources</a></li>
-<li><a class="reference internal" href="#authors">2.6. Authors</a></li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="cice_1_introduction.html"
-                        title="previous chapter">1. Introduction - CICE5</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="cice_3_coupling.html"
-                        title="next chapter">3. Coupling with other climate model components</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/cice_2_quick_start.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -111,12 +69,12 @@ found <a class="reference external" href="https://docs.google.com/document/d/1rR
 <div class="section" id="more-details">
 <h2>2.3. More Details:<a class="headerlink" href="#more-details" title="Permalink to this headline">¶</a></h2>
 <dl class="docutils">
-<dt>create.case generates a case, use “create.case -h” for help with the tool.</dt>
+<dt>create.case generates a case, use &#8220;create.case -h&#8221; for help with the tool.</dt>
 <dd><p class="first">-c is the case name and location (required)</p>
 <p>-m is the machine name (required). Currently, there are working ports for NCAR yellowstone and cheyenne, AFRL thunder, NavyDSRC gordon and conrad, and LANL’s wolf machines.</p>
 <p>-g is the resolution (default is gx3)</p>
 <p>-p is the task x thread/task values (default is 4x1)</p>
-<p>-s are comma separated optional env or namelist settings (default is “null”)</p>
+<p>-s are comma separated optional env or namelist settings (default is &#8220;null&#8221;)</p>
 <p>-t is the test name and location (cannot be used with -c).</p>
 <p>-bd is used to specify the location of the baseline datasets (only used with -t)</p>
 <p>-bg is used to specify the cice version name for generating baseline datasets (only used with -t)</p>
@@ -187,7 +145,7 @@ and details about this grid can be found on the <a class="reference external" hr
 <p>instructions for code developers:</p>
 <p>ongoing or planned development projects:</p>
 <p>list of users and publications:</p>
-<p>Please send references to your publications using the CICE model to …</p>
+<p>Please send references to your publications using the CICE model to ...</p>
 </div>
 <div class="section" id="authors">
 <h2>2.6. Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h2>
@@ -199,6 +157,46 @@ Elizabeth Hunke (<a class="reference external" href="mailto:eclare&#37;&#52;&#48
 
 
           </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2. Quick Start guide</a><ul>
+<li><a class="reference internal" href="#get-the-model">2.1. Get the model</a></li>
+<li><a class="reference internal" href="#running-the-model">2.2. Running the model</a></li>
+<li><a class="reference internal" href="#more-details">2.3. More Details:</a></li>
+<li><a class="reference internal" href="#forcing-data">2.4. Forcing data</a></li>
+<li><a class="reference internal" href="#online-resources">2.5. Online resources</a></li>
+<li><a class="reference internal" href="#authors">2.6. Authors</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cice_1_introduction.html"
+                        title="previous chapter">1. Introduction - CICE5</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="cice_3_coupling.html"
+                        title="next chapter">3. Coupling with other climate model components</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/cice_2_quick_start.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -217,7 +215,7 @@ Elizabeth Hunke (<a class="reference external" href="mailto:eclare&#37;&#52;&#48
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017, Los Alamos National Security, LLC (code) and National Center for Atmospheric Research (documentation).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
     </div>
   </body>
 </html>
