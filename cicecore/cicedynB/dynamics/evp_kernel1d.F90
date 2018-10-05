@@ -1746,65 +1746,10 @@ module evp_kernel1d
        G_stressp_1, G_stressp_2, G_stressp_3, G_stressp_4,                                    &
        G_stressm_1, G_stressm_2, G_stressm_3, G_stressm_4,                                    &
        G_stress12_1,G_stress12_2,G_stress12_3,G_stress12_4
-    ! Temporary variables
-    real (kind=dbl_kind), dimension(nx,ny,nblk) :: I_work
-    real (kind=dbl_kind), dimension(nx_glob,ny_glob) :: G_work
-    integer(int_kind) :: na, navel, i,j,n
+    integer(kind=int_kind) :: na, navel
     !-- Gather data into one single block --
-    ! BEGIN: Gather data
-    !-- icetmask: gather_global_ext only works for reals
-    !$OMP PARALLEL DO PRIVATE(n,i,j)
-    do n=1,nblk
-      do j=1,ny
-        do i=1,nx
-          if (I_icetmask(i,j,n) == 1) then
-            I_work(i,j,n)=c1
-          else
-            I_work(i,j,n)=c0
-          endif
-        enddo
-      enddo
-    enddo
-    !$OMP END PARALLEL DO
-    call gather_global_ext(G_work, I_work, master_task, distrb_info)
-    !$OMP PARALLEL DO PRIVATE(i,j)
-    do j=1,ny_glob
-      do i=1,nx_glob
-        if (G_work(i,j)>p5)  then
-          G_icetmask(i,j)=1
-        else
-          G_icetmask(i,j)=0
-        endif
-      enddo
-    enddo
-    !$OMP END PARALLEL DO
-    !-- iceumask: gather_global_ext only works for reals
-    !$OMP PARALLEL DO PRIVATE(n,i,j)
-    do n=1,nblk
-      do j=1,ny
-        do i=1,nx
-          if (I_iceumask(i,j,n) .eqv. .true.) then
-            I_work(i,j,n)=c1
-          else
-            I_work(i,j,n)=c0
-          endif
-        enddo
-      enddo
-    enddo
-    !$OMP END PARALLEL DO
-    call gather_global_ext(G_work, I_work, master_task, distrb_info)
-    !$OMP PARALLEL DO PRIVATE(i,j)
-    do j=1,ny_glob
-      do i=1,nx_glob
-        if (G_work(i,j)>p5)  then
-          G_iceumask(i,j)=.true.
-        else
-          G_iceumask(i,j)=.false.
-        endif
-      enddo
-    enddo
-    !$OMP END PARALLEL DO
-    !-- the rest
+    call gather_global_ext(G_icetmask, I_icetmask, master_task, distrb_info)
+    call gather_global_ext(G_iceumask, I_iceumask, master_task, distrb_info)
     call gather_global_ext(G_HTE, I_HTE, master_task, distrb_info)
     call gather_global_ext(G_HTN, I_HTN, master_task, distrb_info)
     call gather_global_ext(G_dxhy, I_dxhy, master_task, distrb_info)
