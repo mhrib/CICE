@@ -831,6 +831,37 @@ module bench_v1
     enddo
     !$acc end parallel
   end subroutine stepu_last
+
+  subroutine halo_update(NAVEL_len,lb,ub,uvel,vvel, halo_parent)
+    !- modules -------------------------------------------------------------------
+    use ice_kinds_mod
+    use dmi_omp, only : domp_get_domain
+    !- directives ----------------------------------------------------------------
+    implicit none
+    ! arguments ------------------------------------------------------------------
+    integer (kind=int_kind), intent(in) :: NAVEL_len
+    integer(kind=int_kind),intent(in)   :: lb,ub
+    integer(kind=int_kind),dimension(:), intent(in), contiguous :: halo_parent
+    real(kind=dbl_kind),dimension(:), intent(inout), contiguous :: uvel,vvel
+    ! local variables
+    integer (kind=int_kind) :: iw,il,iu
+
+#ifdef _OPENACC
+    !$acc parallel                                   &
+    !$acc present(uvel,vvel)                         &
+    !$acc loop
+    do iw = 1,NAVEL_len
+#else
+    call domp_get_domain(lb,ub,il,iu)
+    do iw = il, iu
+#endif
+       if (halo_parent(iw)==0) cycle
+       uvel(iw) = uvel(halo_parent(iw))
+       vvel(iw) = vvel(halo_parent(iw))
+    enddo
+    !$acc end parallel
+  end subroutine halo_update
+
 end module bench_v1
 !===============================================================================
 module bench_v2
@@ -1520,6 +1551,37 @@ module bench_v2
     enddo
     !$acc end parallel
   end subroutine stepu_last
+
+  subroutine halo_update(NAVEL_len,lb,ub,uvel,vvel, halo_parent)
+    !- modules -------------------------------------------------------------------
+    use ice_kinds_mod
+    use dmi_omp, only : domp_get_domain
+    !- directives ----------------------------------------------------------------
+    implicit none
+    ! arguments ------------------------------------------------------------------
+    integer (kind=int_kind), intent(in) :: NAVEL_len
+    integer(kind=int_kind),intent(in)   :: lb,ub
+    integer(kind=int_kind),dimension(:), intent(in), contiguous :: halo_parent
+    real(kind=dbl_kind),dimension(:), intent(inout), contiguous :: uvel,vvel
+    ! local variables
+    integer (kind=int_kind) :: iw,il,iu
+
+#ifdef _OPENACC
+    !$acc parallel                                   &
+    !$acc present(uvel,vvel)                         &
+    !$acc loop
+    do iw = 1,NAVEL_len
+#else
+    call domp_get_domain(lb,ub,il,iu)
+    do iw = il, iu
+#endif
+       if (halo_parent(iw)==0) cycle
+       uvel(iw) = uvel(halo_parent(iw))
+       vvel(iw) = vvel(halo_parent(iw))
+    enddo
+    !$acc end parallel
+  end subroutine halo_update
+
 end module bench_v2
   
 !===============================================================================
@@ -1545,7 +1607,7 @@ module evp_kernel1d
   logical(kind=log_kind), dimension(:), allocatable ::             &
     skipucell
   integer(kind=int_kind), dimension(:), allocatable ::             &
-    ee,ne,se,nw,sw,sse,indi,indj,indij                  
+    ee,ne,se,nw,sw,sse,indi,indj,indij , halo_parent                  
   real (kind=dbl_kind), dimension(:), allocatable ::               &
     cdn_ocn,aiu,uocn,vocn,waterx,watery,forcex,forcey,tarear,      &
     umassdti,fm,uarear,strintx,strinty,uvel_init,vvel_init
@@ -1598,7 +1660,7 @@ module evp_kernel1d
     integer(kind=int_kind),intent(in) :: navel
     integer(kind=int_kind)            :: ierr
     allocate(                                                            &
-      uvel(1:navel),vvel(1:navel), indij(1:navel),                       &
+      uvel(1:navel),vvel(1:navel), indij(1:navel), halo_parent(1:navel), &
       str1(1:navel),str2(1:navel),str3(1:navel),str4(1:navel),           &
       str5(1:navel),str6(1:navel),str7(1:navel),str8(1:navel),           &
       stat=ierr)
@@ -1629,7 +1691,7 @@ module evp_kernel1d
       strocnx,strocny,strintx,strinty,            &
       uvel_init,vvel_init,                        &
       ! NAVEL 
-      uvel,vvel, indij,                           &
+      uvel,vvel, indij, halo_parent,              &
       stat=ierr)
     if (ierr/=0) stop 'Error de-allocating 1D'
     if (allocated(tinyarea)) then
@@ -1646,38 +1708,6 @@ module evp_kernel1d
       if (ierr/=0) stop 'Error de-allocating 1D, v2'
     endif
   end subroutine dealloc1d
-  subroutine write1d(na,navel)
-    integer(kind=int_kind),intent(in) :: na,navel
-    integer(kind=int_kind) :: lun, ios
-    integer(kind=int_kind) :: nb
-    nb=na
-    lun=77
-    open(lun,file='EVP_conv1D.bin', form='unformatted', access='stream',   &
-             action='write', iostat=ios)
-    if (ios/=0) stop 'Problem opening file EVP_conv1D.bin'
-    write(lun,iostat=ios)                                                  &
-      ! T cells
-      strength(1:na),dxt(1:na),dyt(1:na),dxhy(1:na),dyhx(1:na),            &
-      cyp(1:na),cym(1:na),cxm(1:na),tinyarea(1:na),stressp_1(1:na),        &
-      stressp_3(1:na),stressp_4(1:na),stressm_1(1:na),stressm_2(1:na),     &
-      stressm_3(1:na),stressm_4(1:na),stress12_1(1:na),                    &
-      cxp(1:na),stressp_2(1:na),                                           &
-      stress12_2(1:na),stress12_3(1:na),stress12_4(1:na),tarear(1:na),     &
-      ! U cells
-      cdn_ocn(1:nb),aiu(1:nb),uocn(1:nb),vocn(1:nb),                       &
-      waterx(1:nb),watery(1:nb),forcex(1:nb),forcey(1:nb),                 &
-      umassdti(1:nb),fm(1:nb),                                             &
-      uarear(1:nb),strintx(1:nb),strinty(1:nb),                            &
-      uvel_init(1:nb),vvel_init(1:nb),                                     &
-      ! common
-      uvel(1:navel),vvel(1:navel),                                         &
-      ! Helper index for neighbours
-!      indi(1:navel),indj(1:navel),                   &
-      ee(1:na),ne(1:na),se(1:na),                                          &
-      nw(1:nb),sw(1:nb),sse(1:nb), skipucell(1:na)
-    if (ios/=0) stop 'Problem writing file EVP_conv1D.bin'
-    close(lun)
-  end subroutine write1d
 !===============================================================================
 !===============================================================================
   subroutine evp_copyin_v0(nx,ny,nblk,nx_glob,ny_glob,                                        &
@@ -1837,6 +1867,7 @@ module evp_kernel1d
         G_stressp_1, G_stressp_2, G_stressp_3, G_stressp_4,                             &
         G_stressm_1, G_stressm_2, G_stressm_3, G_stressm_4,                             &
        G_stress12_1,G_stress12_2,G_stress12_3,G_stress12_4                              )
+    call calc_halo_parent(nx_glob,ny_glob,na,navel, G_icetmask)
     NA_len=na
     NAVEL_len=navel
     !-- write check
@@ -1903,7 +1934,7 @@ module evp_kernel1d
     G_rdg_conv   = c0
     G_rdg_shear  = c0
     G_shear      = c0
-    !$OMP PARALLEL PRIVATE(iw)
+    !$OMP PARALLEL PRIVATE(iw,i,j)
     do iw=1,NA_len
       i=indi(iw)
       j=indj(iw)
@@ -1988,7 +2019,7 @@ module evp_kernel1d
   subroutine evp_kernel_v1
     use ice_constants, only : c0
     use ice_dyn_shared, only: ndte
-    use bench_v1, only : stress, stepu
+    use bench_v1, only : stress, stepu, halo_update
     use dmi_omp, only : domp_init
     use icepack_intfc, only: icepack_query_parameters
     implicit none
@@ -2030,6 +2061,8 @@ module evp_kernel1d
                    uvel_init,vvel_init,uvel,vvel,                                &
                    str1,str2,str3,str4,str5,str6,str7,str8, nw,sw,sse,skipucell)
       !$OMP BARRIER
+      call halo_update(NA_len,1,navel,uvel,vvel, halo_parent)
+      !$OMP BARRIER
     enddo
     call stress   (NA_len, tarear,                                               &
                    ee,ne,se,1,na,uvel,vvel,dxt,dyt,                              & 
@@ -2046,13 +2079,14 @@ module evp_kernel1d
                    uvel_init,vvel_init,uvel,vvel,                                &
                    str1,str2,str3,str4,str5,str6,str7,str8, nw,sw,sse,skipucell)
     !$OMP BARRIER
+    call halo_update(NA_len,1,navel,uvel,vvel, halo_parent)
     !$OMP END PARALLEL
   end subroutine evp_kernel_v1
   !===============================================================================
   subroutine evp_kernel_v2
     use ice_constants, only : c0
     use ice_dyn_shared, only: ndte
-    use bench_v2, only : stress, stepu
+    use bench_v2, only : stress, stepu, halo_update
     use dmi_omp, only : domp_init
     use icepack_intfc, only: icepack_query_parameters
     implicit none
@@ -2094,6 +2128,8 @@ module evp_kernel1d
                    uvel_init,vvel_init,uvel,vvel,                                &
                    str1,str2,str3,str4,str5,str6,str7,str8, nw,sw,sse,skipucell)
       !$OMP BARRIER
+      call halo_update(NA_len,1,navel,uvel,vvel, halo_parent)
+      !$OMP BARRIER
     enddo
     call stress   (NA_len, tarear,                                               &
                    ee,ne,se,1,na,uvel,vvel,dxt,dyt,                              & 
@@ -2110,10 +2146,12 @@ module evp_kernel1d
                    uvel_init,vvel_init,uvel,vvel,                                &
                    str1,str2,str3,str4,str5,str6,str7,str8, nw,sw,sse,skipucell)
     !$OMP BARRIER
+    call halo_update(NA_len,1,navel,uvel,vvel, halo_parent)
     !$OMP END PARALLEL
   end subroutine evp_kernel_v2
   !===============================================================================
   subroutine calc_na(nx,ny,na,icetmask)
+    ! Calculate number of active points (na)
     use ice_blocks, only: nghost
     implicit none
     integer(int_kind),intent(in) :: nx,ny
@@ -2164,6 +2202,7 @@ module evp_kernel1d
     endif
   end subroutine calc_2d_indices
   subroutine calc_navel(nx_block,ny_block,na,navel)
+    ! Calculate number of active points including needed halo points (navel)
     implicit none
     integer(int_kind),intent(in)  :: nx_block,ny_block,na
     integer(int_kind),intent(out) :: navel
@@ -2278,14 +2317,17 @@ module evp_kernel1d
 !endif
 
     ! Write 1D data from 2D: Here only extra FD part, the rest follows...
+    !$OMP PARALLEL DO PRIVATE(iw,i,j)
     do iw=na+1,navel
       j=int((indij(iw)-1)/(nx_block))+1
       i=indij(iw)-(j-1)*nx_block
       uvel(iw)=      I_uvel(i,j)
       vvel(iw)=      I_vvel(i,j)
     enddo
+    !$OMP END PARALLEL DO
     
     ! Write 1D data from 2D
+    !$OMP PARALLEL DO PRIVATE(iw,i,j)
     do iw=1,na
       i=indi(iw)
       j=indj(iw)
@@ -2336,7 +2378,31 @@ module evp_kernel1d
       HTEm1(iw) = I_HTE(i-1,j)
       HTNm1(iw) = I_HTN(i,j-1)
     enddo
+    !$OMP END PARALLEL DO
   end subroutine convert_2d_1d
+  subroutine calc_halo_parent(nx,ny,na,navel, I_icetmask)
+    implicit none
+    integer(int_kind),intent(in) :: nx,ny,na,navel
+    integer(kind=int_kind), dimension(nx,ny), intent(in) :: I_icetmask
+    integer(int_kind) :: iw,i,j !,masku,maskt
+    integer(int_kind),dimension(1:navel-na) :: Ihalo
+    ! Indices for halo update
+    ! TODO: ONLY for nghost==1
+    ! TODO: ONLY for circular grids - NOT tripole grids
+    Ihalo(:)=0
+    !$OMP PARALLEL DO PRIVATE(iw,i,j)
+    do iw=na+1,navel
+      j=int((indij(iw)-1)/(nx))+1
+      i=indij(iw)-(j-1)*nx
+      if (i==nx .and. I_icetmask(   2,j)==1) Ihalo(iw-na)=     2+ (j-1)*nx
+      if (i==1  .and. I_icetmask(nx-1,j)==1) Ihalo(iw-na)=(nx-1)+ (j-1)*nx
+      if (j==ny .and. I_icetmask(i,   2)==1) Ihalo(iw-na)=     i+       nx
+      if (j==1  .and. I_icetmask(i,ny-1)==1) Ihalo(iw-na)=     i+(ny-2)*nx
+    enddo
+    !$OMP END PARALLEL DO
+    call findXinY_halo(Ihalo,indij(1:na),navel-na,na,halo_parent(na+1:navel))
+!    halo_parent(1:na)=0 ! Done in numainit
+  end subroutine calc_halo_parent
   !=======================================================================
   subroutine union(x,y,nx,ny,xy,nxy)
     ! Find union (xy) of two sorted integer vectors (x and y)
@@ -2352,7 +2418,6 @@ module evp_kernel1d
     j=1
     k=1
     do while (i<=nx .and. j<=ny)
-!write(*,*)'i,j,k,x(i),y(j):',i,j,k,x(i),y(j)
       if (x(i)<y(j)) then
         xy(k)=x(i)
         i=i+1
@@ -2368,13 +2433,11 @@ module evp_kernel1d
     enddo
     ! The rest
     do while (i<=nx)
-!write(*,*)'I,k,x(i),y(j):',i,j-1,k,x(i),y(j-1)
       xy(k)=x(i)
       i=i+1
       k=k+1
     enddo
     do while (j<=ny)
-!write(*,*)'i,J,k,x(i),y(j):',i-1,j,k,x(i-1),y(j)
       xy(k)=y(j)
       j=j+1
       k=k+1
@@ -2464,6 +2527,55 @@ module evp_kernel1d
       endif
     end do
   end subroutine findXinY
+  subroutine findXinY_halo(x,y,nx,ny,indx)
+    ! Find indx vector so that x(1:na)=y(indx(1:na))
+    !
+    !  Conditions:
+    !   * EVERY item in x is found in y.
+    !       Except for x==0, where indx=0 is returned
+    !   * x(1:nx) is an integer vector. Not sorted.
+    !   * y(1:ny) is a sorted integer vector
+    !   * ny>=nx
+    !  Return: indx(1:na)
+    !
+    !use ice_kinds_mod
+    implicit none
+    integer (int_kind),intent(in)  :: nx,ny
+    integer (int_kind),intent(in)  :: x(1:nx),y(1:ny)
+    integer (int_kind),intent(out) :: indx(1:nx)
+    integer (int_kind) :: i,j1,nloop
+    nloop=1
+    i=1
+    j1=int((ny+1)/2) ! initial guess in the middle
+    do while (i<=nx)
+      if (x(i)==0) then
+        indx(i)=0
+        i=i+1
+        nloop=1
+      else if (x(i)==y(j1)) then
+        indx(i)=j1
+        i=i+1
+        j1=j1+1
+        if (j1>ny) j1=int((ny+1)/2) ! initial guess in the middle
+        nloop=1
+      else if (x(i)<y(j1) ) then
+        j1=1
+      else if (x(i)>y(j1) ) then
+        j1=j1+1
+        if (j1>ny) then
+          j1=1
+          nloop=nloop+1
+          if (nloop>2) then
+            ! Stop for inf. loop. This check should not be necessary for halo
+            write(*,*)'nx,ny: ',nx,ny
+            write(*,*)'i,j1: ',i,j1
+            write(*,*)'x(i),y(j1): ',x(i),y(j1)
+            stop 'ERROR in findXinY_halo: too many loops'
+          endif
+        endif
+      endif
+    end do
+  end subroutine findXinY_halo
 
   !=======================================================================
   subroutine numainit(l,u,uu)
@@ -2482,11 +2594,16 @@ module evp_kernel1d
     sse(lo:up)=0
     nw(lo:up)=0
     sw(lo:up)=0
+    halo_parent(lo:up)=0
     strength(lo:up)=c0
     uvel(lo:up)=c0
     vvel(lo:up)=c0
     dxt(lo:up)=c0
     dyt(lo:up)=c0
+    HTE(lo:up)=c0
+    HTN(lo:up)=c0
+    HTEm1(lo:up)=c0
+    HTNm1(lo:up)=c0
     dxhy(lo:up)=c0
     dyhx(lo:up)=c0
     cyp(lo:up)=c0
@@ -2520,16 +2637,17 @@ module evp_kernel1d
     str7(lo:up)=c0
     str8(lo:up)=c0
     call domp_get_domain(u+1,uu,lo,up)
+    halo_parent(lo:up)=0
     uvel(lo:up)=c0
     vvel(lo:up)=c0
-!    str1(lo:up)=c0
-!    str2(lo:up)=c0
-!    str3(lo:up)=c0
-!    str4(lo:up)=c0
-!    str5(lo:up)=c0
-!    str6(lo:up)=c0
-!    str7(lo:up)=c0
-!    str8(lo:up)=c0
+    str1(lo:up)=c0
+    str2(lo:up)=c0
+    str3(lo:up)=c0
+    str4(lo:up)=c0
+    str5(lo:up)=c0
+    str6(lo:up)=c0
+    str7(lo:up)=c0
+    str8(lo:up)=c0
   end subroutine numainit
   
   !=======================================================================
