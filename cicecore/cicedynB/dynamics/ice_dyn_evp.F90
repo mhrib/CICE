@@ -102,6 +102,9 @@
       use ice_domain_size, only: nx_global, ny_global 
       use ice_blocks, only: nghost
       use ice_dyn_shared, only: evp_kernel_ver
+!MHRI rm
+      use ice_calendar, only: istep, npt
+!MHRI rm
 #endif
 #ifdef DMI_EVP_TEST
       use ice_gather_scatter, only: gather_global
@@ -342,38 +345,65 @@
          call ice_HaloMask(halo_info_mask, halo_info, halomask)
       endif
 
+#ifdef DMI_EVP_TEST
+      !------------------------------------
+      ! uvel,vvel output
+      ! Use j as temporary input-unit
+      j=999
+ 
+      !- Gather global
+      call gather_global(uvel_g, uvel, master_task, distrb_info)
+      call gather_global(vvel_g, vvel, master_task, distrb_info)
+
+      !------------------------------------
+      if (my_task == master_task) then
+        if (istep == 1) then
+          open(j, file='EVP_input_uvel_vvel_istep1.bin', form='unformatted', access='stream',&
+               action='write', status='replace', iostat=i)
+          write(j,iostat=i) uvel_g,vvel_g
+          close(j)
+        else if (istep == npt) then
+          open(j, file='EVP_input_uvel_vvel.bin', form='unformatted', access='stream',&
+               action='write', status='replace', iostat=i)
+          write(j,iostat=i) uvel_g,vvel_g
+          close(j)
+        endif
+      endif
+#endif
+
+
 #ifdef DMI_EVP
       if (evp_kernel_ver > 0) then
-        write(*,*)'Entering evp_kernel version ',evp_kernel_ver
-        if (my_task == master_task) then
-          call evp_copyin(                                                &
-            nx_block,ny_block,nblocks,nx_global+2*nghost,ny_global+2*nghost,&
-            HTE,HTN,dxhy,dyhx,cyp,cxp,cym,cxm,tinyarea,                   &
-            icetmask, iceumask,                                           &
-            cdn_ocn,aiu,uocn,vocn,waterx,watery,forcex,forcey,            &
-            umassdti,fm,uarear,tarear,strintx,strinty,uvel_init,vvel_init,&
-            strength,uvel,vvel,dxt,dyt,                                   &
-            stressp_1 ,stressp_2, stressp_3, stressp_4,                   &
-            stressm_1 ,stressm_2, stressm_3, stressm_4,                   &
-            stress12_1,stress12_2,stress12_3,stress12_4                   )
-          if (evp_kernel_ver == 1) then
-            call evp_kernel_v1()
-          else if (evp_kernel_ver == 2) then
-            call evp_kernel_v2()
-          else
-            write(*,*)'Kernel: evp_kernel_ver = ',evp_kernel_ver
-            stop 'Kernel not implemented yet.'
-          endif
-          call evp_copyout(                                               &
-            nx_block,ny_block,nblocks,nx_global+2*nghost,ny_global+2*nghost,&
-            uvel,vvel, strintx,strinty, strocnx,strocny,                  &
-            stressp_1, stressp_2, stressp_3, stressp_4,                   &
-            stressm_1, stressm_2, stressm_3, stressm_4,                   &
-            stress12_1,stress12_2,stress12_3,stress12_4,                  &
-            divu,rdg_conv,rdg_shear,shear                                 )
+        if (istep == 1 .and. my_task == master_task) &
+          write(*,*)'Entering evp_kernel version ',evp_kernel_ver
+        call evp_copyin(                                                &
+          nx_block,ny_block,nblocks,nx_global+2*nghost,ny_global+2*nghost,&
+          HTE,HTN,                                                      &
+!v1          dxhy,dyhx,cyp,cxp,cym,cxm,tinyarea,                           &
+          icetmask, iceumask,                                           &
+          cdn_ocn,aiu,uocn,vocn,waterx,watery,forcex,forcey,Cbu,        &
+          umassdti,fm,uarear,tarear,strintx,strinty,uvel_init,vvel_init,&
+          strength,uvel,vvel,dxt,dyt,                                   &
+          stressp_1 ,stressp_2, stressp_3, stressp_4,                   &
+          stressm_1 ,stressm_2, stressm_3, stressm_4,                   &
+          stress12_1,stress12_2,stress12_3,stress12_4                   )
+        if (evp_kernel_ver == 2) then
+          call evp_kernel_v2()
+!        else if (evp_kernel_ver == 1) then
+!          call evp_kernel_v1()
+        else
+          write(*,*)'Kernel: evp_kernel_ver = ',evp_kernel_ver
+          stop 'Kernel not implemented.'
         endif
+        call evp_copyout(                                               &
+          nx_block,ny_block,nblocks,nx_global+2*nghost,ny_global+2*nghost,&
+          uvel,vvel, strintx,strinty, strocnx,strocny,                  &
+          stressp_1, stressp_2, stressp_3, stressp_4,                   &
+          stressm_1, stressm_2, stressm_3, stressm_4,                   &
+          stress12_1,stress12_2,stress12_3,stress12_4,                  &
+          divu,rdg_conv,rdg_shear,shear,taubx,tauby                     )
 
-      else ! evp_kernel_ver == 0
+      else ! evp_kernel_ver == 0 (Standard CICE)
 #endif
 
       do ksub = 1,ndte        ! subcycling
@@ -471,6 +501,58 @@
       endif ! evp_kernel_ver
 #endif
       
+#ifdef DMI_EVP_TEST
+      !------------------------------------
+      ! uvel,vvel output
+      ! Use j as temporary input-unit
+      j=999
+ 
+      !- Gather global
+      call gather_global(uvel_g, uvel, master_task, distrb_info)
+      call gather_global(vvel_g, vvel, master_task, distrb_info)
+
+      !------------------------------------
+      if (my_task == master_task) then
+        if (istep == 1) then
+          open(j, file='EVP_output_uvel_vvel_istep1.bin', form='unformatted', access='stream',&
+               action='write', status='replace', iostat=i)
+          write(j,iostat=i) uvel_g,vvel_g
+          close(j)
+        else if (istep == npt) then
+          open(j, file='EVP_output_uvel_vvel.bin', form='unformatted', access='stream',&
+               action='write', status='replace', iostat=i)
+          write(j,iostat=i) uvel_g,vvel_g
+          close(j)
+        endif
+
+        #MHRI: NOTE: (strocnx,strocny) gives different md5sum.
+        #MHRI:       However do not affect all the other variables
+        #MHRI          even after 24 iterations with GX3, ndte=120
+        if (istep == 1) then
+          open(j, file='EVP_copyout_istep1.bin', form='unformatted', access='stream',&
+               action='write', status='replace', iostat=i)
+          write(j,iostat=i)                                             &
+          uvel,vvel, strintx,strinty, strocnx,strocny, taubx,tauby,     &
+          stressp_1, stressp_2, stressp_3, stressp_4,                   &
+          stressm_1, stressm_2, stressm_3, stressm_4,                   &
+          stress12_1,stress12_2,stress12_3,stress12_4,                  &
+          divu,rdg_conv,rdg_shear,shear
+          close(j)
+        else if (istep == npt) then
+          open(j, file='EVP_copyout.bin', form='unformatted', access='stream',&
+               action='write', status='replace', iostat=i)
+          write(j,iostat=i)                                             &
+          uvel,vvel, strintx,strinty, strocnx,strocny, taubx,tauby,     &
+          stressp_1, stressp_2, stressp_3, stressp_4,                   &
+          stressm_1, stressm_2, stressm_3, stressm_4,                   &
+          stress12_1,stress12_2,stress12_3,stress12_4,                  &
+          divu,rdg_conv,rdg_shear,shear
+          close(j)
+        endif
+
+      endif
+#endif
+
       ! calculate basal stress component for outputs
       if ( basalstress ) then
          !$OMP PARALLEL DO PRIVATE(iblk)
@@ -578,30 +660,6 @@
       call u2tgrid_vector(strocnyT)
 
       call ice_timer_stop(timer_dynamics)    ! dynamics
-
-#ifdef DMI_EVP_TEST
-      !------------------------------------
-      ! uvel,vvel output
-      ! Use j as temporary input-unit
-      j=999
- 
-      !- Gather global
-      call gather_global(uvel_g, uvel, master_task, distrb_info)
-      call gather_global(vvel_g, vvel, master_task, distrb_info)
-
-      !------------------------------------
-      if (istep == 1) then
-        open(j, file='EVP_output_uvel_vvel_istep1.bin', form='unformatted', access='stream',&
-             action='write', status='replace', iostat=i)
-        write(j,iostat=i) uvel_g,vvel_g
-        close(j)
-      else if (istep == npt) then
-        open(j, file='EVP_output_uvel_vvel.bin', form='unformatted', access='stream',&
-             action='write', status='replace', iostat=i)
-        write(j,iostat=i) uvel_g,vvel_g
-        close(j)
-      endif
-#endif
 
       end subroutine evp
 
@@ -750,7 +808,6 @@
          Deltase = sqrt(divuse**2 + ecci*(tensionse**2 + shearse**2))
          Deltasw = sqrt(divusw**2 + ecci*(tensionsw**2 + shearsw**2))
 
-#ifndef DMI_TEST_EVP
       !-----------------------------------------------------------------
       ! on last subcycle, save quantities for mechanical redistribution
       !-----------------------------------------------------------------
@@ -767,7 +824,6 @@
                 +  (shearne +   shearnw +   shearse +   shearsw)**2)
 
          endif
-#endif
 
       !-----------------------------------------------------------------
       ! replacement pressure/Delta                   ! kg/s
