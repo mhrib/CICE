@@ -525,9 +525,9 @@
           close(j)
         endif
 
-        #MHRI: NOTE: (strocnx,strocny) gives different md5sum.
-        #MHRI:       However do not affect all the other variables
-        #MHRI          even after 24 iterations with GX3, ndte=120
+        !MHRI: NOTE: (strocnx,strocny) gives different md5sum.
+        !MHRI:       However do not affect all the other variables
+        !MHRI          even after 24 iterations with GX3, ndte=120
         if (istep == 1) then
           open(j, file='EVP_copyout_istep1.bin', form='unformatted', access='stream',&
                action='write', status='replace', iostat=i)
