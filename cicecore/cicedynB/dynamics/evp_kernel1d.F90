@@ -8,6 +8,10 @@
 !     call evp_kernel()
 !     call evp_copyout(...)
 !
+! REAL4 internal:
+!   mv evp_kernel1d.F90 evp_kernel1d_r8.F90
+!   cat evp_kernel1d_r8.F90 | sed s/DBL_KIND/real_kind/g > evp_kernel1d.F90
+!
 ! Jacob Weismann Poulsen (JWP), Mads Hvid Ribergaard (MHRI), DMI
 !===============================================================================
 
@@ -180,11 +184,11 @@ module bench_v2
     real    (kind=dbl_kind), dimension(:), intent(inout), contiguous ::          &
        stressp_1,stressp_2,  stressp_3, stressp_4, stressm_1,  stressm_2,        &
        stressm_3,stressm_4, stress12_1,stress12_2,stress12_3, stress12_4
-    real    (kind=dbl_kind), dimension(:), intent(out),   contiguous ::          &
+    real    (kind=DBL_KIND), dimension(:), intent(out),   contiguous ::          &
        str1,str2,str3,str4,str5,str6,str7,str8
     ! local variables ------------------------------------------------------------
     integer (kind=int_kind) :: iw,il,iu
-    real    (kind=dbl_kind) ::                                                   &
+    real    (kind=DBL_KIND) ::                                                   &
       divune, divunw, divuse, divusw,tensionne, tensionnw, tensionse, tensionsw, & 
       shearne, shearnw, shearse, shearsw, Deltane, Deltanw, Deltase, Deltasw   , &
       c0ne, c0nw, c0se, c0sw, c1ne, c1nw, c1se, c1sw                           , &
@@ -194,7 +198,7 @@ module bench_v2
       csigmsw, csig12ne, csig12nw, csig12se, csig12sw, str12ew, str12we,str12ns, &
       str12sn, strp_tmp, strm_tmp, tmp_uvel_ee, tmp_vvel_se, tmp_vvel_ee,        &
       tmp_vvel_ne, tmp_uvel_ne, tmp_uvel_se
-    real    (kind=dbl_kind) :: dxhy,dyhx,cxp,cyp,cxm,cym,tinyarea
+    real    (kind=DBL_KIND) :: dxhy,dyhx,cxp,cyp,cxm,cym,tinyarea
    
 #ifdef _OPENACC
     !$acc parallel                                                                 &
@@ -436,12 +440,13 @@ module bench_v2
     real    (kind=dbl_kind), dimension(:), intent(inout), contiguous ::          &
        stressp_1,stressp_2,  stressp_3, stressp_4, stressm_1,  stressm_2,        &
        stressm_3,stressm_4, stress12_1,stress12_2,stress12_3, stress12_4
+    real    (kind=DBL_KIND), dimension(:), intent(out),   contiguous ::          &
+       str1,str2,str3,str4,str5,str6,str7,str8
     real    (kind=dbl_kind), dimension(:), intent(out),   contiguous ::          &
-            str1,str2,str3,str4,str5,str6,str7,str8,                             &
-            divu,rdg_conv,rdg_shear,shear
+       divu,rdg_conv,rdg_shear,shear
     ! local variables ------------------------------------------------------------
     integer (kind=int_kind) :: iw,il,iu
-    real    (kind=dbl_kind) ::                                                   &
+    real    (kind=DBL_KIND) ::                                                   &
       divune, divunw, divuse, divusw,tensionne, tensionnw, tensionse, tensionsw, & 
       shearne, shearnw, shearse, shearsw, Deltane, Deltanw, Deltase, Deltasw   , &
       c0ne, c0nw, c0se, c0sw, c1ne, c1nw, c1se, c1sw                           , &
@@ -451,7 +456,7 @@ module bench_v2
       csigmsw, csig12ne, csig12nw, csig12se, csig12sw, str12ew, str12we,str12ns, &
       str12sn, strp_tmp, strm_tmp, tmp_uvel_ee, tmp_vvel_se, tmp_vvel_ee,        &
       tmp_vvel_ne, tmp_uvel_ne, tmp_uvel_se
-    real    (kind=dbl_kind) :: dxhy,dyhx,cxp,cyp,cxm,cym,tinyarea
+    real    (kind=DBL_KIND) :: dxhy,dyhx,cxp,cyp,cxm,cym,tinyarea
   
 #ifdef _OPENACC
     !$acc parallel                                                                 &
@@ -692,7 +697,9 @@ module bench_v2
     integer(kind=int_kind),dimension(:), intent(in), contiguous :: nw,sw,se
     real(kind=dbl_kind),dimension(:), intent(in), contiguous    ::               &
        uvel_init, vvel_init, aiu, forcex, forcey, umassdti, Tbu,                 &
-       uocn, vocn, fm, uarear,Cw,str1,str2,str3,str4,str5,str6,str7,str8
+       uocn, vocn, fm, uarear,Cw
+    real(kind=DBL_KIND),dimension(:), intent(in), contiguous ::                  &
+       str1,str2,str3,str4,str5,str6,str7,str8
     real(kind=dbl_kind),dimension(:), intent(inout), contiguous ::               &
        uvel,vvel
     real (kind=dbl_kind), parameter :: &
@@ -773,7 +780,9 @@ module bench_v2
     integer(kind=int_kind),dimension(:), intent(in), contiguous :: nw,sw,se
     real(kind=dbl_kind),dimension(:), intent(in), contiguous    ::               &
        uvel_init, vvel_init, aiu, forcex, forcey, umassdti, Tbu,                 &
-       uocn, vocn, fm, uarear,Cw,str1,str2,str3,str4,str5,str6,str7,str8
+       uocn, vocn, fm, uarear,Cw
+    real(kind=DBL_KIND),dimension(:), intent(in), contiguous ::                  &
+       str1,str2,str3,str4,str5,str6,str7,str8
     real(kind=dbl_kind),dimension(:), intent(inout), contiguous ::               &
        uvel,vvel,strintx, strinty
     real(kind=dbl_kind),dimension(:), intent(out),   contiguous ::               &
@@ -910,8 +919,9 @@ module evp_kernel1d
     stressp_1, stressp_2, stressp_3, stressp_4,                    &
     stressm_1, stressm_2, stressm_3, stressm_4,                    &
     stress12_1,stress12_2,stress12_3,stress12_4,                   &
-    str1, str2, str3, str4, str5, str6, str7, str8,                &
     divu,rdg_conv,rdg_shear,shear,taubx,tauby
+  real (kind=DBL_KIND), dimension(:), allocatable ::               &
+    str1, str2, str3, str4, str5, str6, str7, str8
   real (kind=dbl_kind), dimension(:), allocatable ::               &
     HTE,HTN,                                                       &
     HTEm1,HTNm1
