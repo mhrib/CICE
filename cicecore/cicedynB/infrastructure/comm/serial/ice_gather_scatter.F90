@@ -695,7 +695,7 @@
      i,j,n          ,&! dummy loop counters
      nx, ny           ! global dimensions
 
-   real (log_kind) :: &
+   logical (log_kind) :: &
      special_value
 
    type (block) :: &
