@@ -531,7 +531,7 @@
      i,j,n          ,&! dummy loop counters
      nx, ny           ! global dimensions
 
-   real (int_kind) :: &
+   integer (int_kind) :: &
      special_value
 
    type (block) :: &
